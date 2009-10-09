@@ -1,5 +1,5 @@
 /*
- * jQuery toggleControl 1.0
+ * jQuery toggleControl 1.1
  * 
  * Copyright (c) 2008 Darren Oakley
  *
@@ -10,10 +10,9 @@
  *   http://www.gnu.org/licenses/gpl.html
  *
  */
-
-;(function($) {
+(function($) {
     $.fn.extend({
-        toggleControl: function( element, options ) {
+        toggleControl: function( element, params ) {
             
             var defaults = {
                 hide: true,
@@ -23,7 +22,7 @@
                 closeClass: "toggle-close"
             };
             
-            var options = $.extend(defaults, options);
+            var options = $.extend(defaults, params);
             
             return this.each( function( index ) {
                 var obj = $(this);
@@ -32,11 +31,17 @@
                     
                     if ( options.hide ) {
                         $(toggle).addClass( options.openClass );
-                        $(element).slideUp( options.speed );
+                        if ( $(element).attr("display") !== "none" ) {
+                          $(element).slideUp( options.speed );
+                        }
                     } else {
                         $(toggle).addClass( options.closeClass );
+                        if ( $(element).attr("display") === "none" ) {
+                          $(element).slideDown( options.speed );
+                        }
                     }
                     
+                    $(toggle).unbind( options.event );
                     $(toggle).bind( options.event, function(event) {
                         $(toggle).toggleClass( options.openClass );
                         $(toggle).toggleClass( options.closeClass );
